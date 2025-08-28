@@ -1,5 +1,5 @@
 # Actividad 1 - Sergio Quesada
-# Tiempo invertido: 00:10
+# Tiempo invertido: 01:00
 
 ## Devops vs. cascada tradicional 
 ### Imagen comparativa
