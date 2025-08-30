@@ -1,5 +1,5 @@
 # Actividad 1 - Sergio Quesada
-# Tiempo invertido: 02:00
+# Tiempo invertido: 03:30
 
 ## Devops vs. cascada tradicional 
 ### Imagen comparativa
@@ -27,3 +27,40 @@ CI es la integración continua, cada que se agrega nuevo código, este se compil
 Las reuniones diarias sirven para que cada miembro del equipo comparta información actualizada sobre su trabajo y sus siguientes pasos, esto sirve para que los miembros comprendan y ayuden a solucionar y prevenir los problemas de sus compañeros, además de estar preparados para las nuevas tareas que les correspondan al día siguiente.
 ### Indicador observable (no financiero) para medir mejora de colaboración Dev-Ops
 **Proporción de rollbacks sin downtime**, Un rollback es el proceso retorno a la última versión estable de la aplicación, cuando se despliega una nueva versión pueden surgir problemas. Se debe realizar este proceso cumpliendo un conjunto de condiciones para considerarlos 'sin downtime' (latencia controlada, disponibilidad, tasa de errores estables, etc). Estas características son observables y se pueden registrar, al final del proceso se verifica si se cumplieron con las condiciones y se determina si hubo downtime. Una mayor cantidad de rollbacks sin downtime indica una buena colaboración entre desarrollo y operaciones.
+## Evolución a DevSecOps (seguridad desde el inicio: SAST/DAST; cambio cultural)
+### Diferencia entre SAST y DAST
+Sast es el análisis del código recién agregado, no se compila, sino que se revisa el código en busca de malas prácticas, como el uso de funciones inseguras, no proteger las entradas del usuario, exponer datos, etc. Se ubica antes de la integración continua.
+Dast es el análisis del proyecto desplegado, se detectan vulnerabilidades haciendo distintas pruebas desde la aplicación en ejecución. Es la situación en la que se encuentra un atacante real, por lo que en esta fase trabaja el red team(un equipo que se encarga de explotar las vulnerabilidades y hacer reportes).Se ubica en la fase de entrega continua, las pruebas se realizan al desplegar el proyecto en un entorno de prueba.
+### Define un gate mínimo de seguridad con dos umbrales cuantitativos (por ejemplo, "cualquier hallazgo crítico en componentes expuestos bloquea la promoción"; "cobertura mínima de pruebas de seguridad del X%").
+- Cualquier hallazgo de exposición de componentes bloquea la promoción, por ejemplo una api para iniciar sesión expuesta puede ser utilizada para obtener credenciales usando fuerza bruta.
+- Cobertura mínima de pruebas de seguridad del 80%.
+### Política de excepción
+Se admitiran una cobertura mínima de pruebas en SAST <80% si existe una limitación de tiempo relacionada con la entrega del producto al cliente.
+- Caducidad: 1 semana.
+- Responsable: Encargado del area de ciberseguridad del proyecto.
+- Plan de corrección: Realizar las pruebas necesarias para cubrir los requerimientos mínimos durante el plazo de tiempo concedido.
+### ¿cómo evitar el "teatro de seguridad" (cumplir checklist sin reducir riesgo)? Propón dos señales de eficacia (disminución de hallazgos repetidos; reducción en tiempo de remediación) y cómo medirlas.
+Lo principal sería concientizar a los miembros del equipo a través de talleres y charlas relacionadas a la seguridad y buenas prácticas, se debe designar a un encargado en el area de seguridad que sea responsable por verificar el trabajo de los miembros de su área y garantizarles las herramientas adecuadas.
+Señales de eficacia:
+- Reducción en el tiempo de la fase de agregar nuevo código, al capacitar e informar a los desarrolladores sobre las buenas prácticas el hallazgo de vulnerabilidades en el SAST se reducira evitando la devolución y corrección.
+- Reducción en el tiempo de remediación, al tener personal capacitado los tiempos de reparación es menor que al tener a personal con menos nivel.
+## CI/CD y estrategias de despliegue (sandbox, canary, azul/verde)
+El despliegue canario consiste en conducir un pequeña fracción del tráfico hacia la nueva versión de la aplicación,
+si no se detectan fallos se realiza la transición de forma gradual.
+![Canary](imagenes/Canary.jpg)
+### Canary para un servicio de autenticación
+Despliegue canario par el microservicio de autenticación, se elige esta estrategia porque la autenticación es una funcionalidad fundamental para la aplicación, si existen errores se limitarán a un pequeño porcentaje de clientes afectados y el proceso de rollback es rápido.
+### Riesgos vs. mitigaciones
+|Riesgo    |Mitigación    |
+|----------|--------------|
+|Manejo de sesiones|Limitar el inicio de sesión sin cortar las sesiones activas, dejar que se cierren por si solas para evitar errores|
+|Costo operativo de dos versiones| Limitar el tiempo de prueba hasta la migración total|
+|Pérdida de datos|Crear backups antes de la migración|
+|Aparición de vulnerabilidades|Ejecutar DAST para identificar y reparar las vulnerabilidades|
+### KPI primario
+Es un indicador de rendimiento, se usa para tomar decisiones sobre el despliegue.
+En el caso del microservicio de autenticación podemos cuantizar la tasa de errores 5xx( errores del servidor ).
+Definimos la tasa de errores 5xx < 0.5% durante la primera hora, en caso de superar el límite iniciamos el proceso de rollback.
+### Si el KPI técnico se mantiene, pero cae una métrica de producto (conversión), explica por qué ambos tipos de métricas deben coexistir en el gate.
+Por que la experiencia del usuario es más importante, el producto puede ser técnicamente funcional pero problemático para el cliente, si ignoramos estás métricas el proyecto va a fracasar.
+
