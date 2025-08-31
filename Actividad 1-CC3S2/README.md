@@ -1,5 +1,5 @@
 # Actividad 1 - Sergio Quesada
-# Tiempo invertido: 03:30
+# Tiempo invertido: 05:30
 
 ## Devops vs. cascada tradicional 
 ### Imagen comparativa
@@ -63,4 +63,35 @@ En el caso del microservicio de autenticación podemos cuantizar la tasa de erro
 Definimos la tasa de errores 5xx < 0.5% durante la primera hora, en caso de superar el límite iniciamos el proceso de rollback.
 ### Si el KPI técnico se mantiene, pero cae una métrica de producto (conversión), explica por qué ambos tipos de métricas deben coexistir en el gate.
 Por que la experiencia del usuario es más importante, el producto puede ser técnicamente funcional pero problemático para el cliente, si ignoramos estás métricas el proyecto va a fracasar.
+## Fundamentos prácticos
+### HTTP - contrato observable
+![http-evidencia](imagenes/http-evidencia.png)
+Método GET, código de estado 200.
+Cabeceras:
+- Alt-Svc, indica que el servidor soporta HTTP/3 por el puerto 443.El cliente puede recordar esta información por 86400 segundos.
+- Cache-control, private indica que solo el cliente puede cachear la respuesta, no los intermediarios; no-cache, el cliente debe revalidar con el servidor antes de reutilizarla; no-store, indica que no se debe almacenar en la cache; must-revalidate, cuando la respuesta expire el cliente debe volver a consultar al servidor.
+- Content-Encoding, indica el algoritmo de compresión usado en el cuerpo.
+### DNS - nombres y TTL
+![dns-ttl](imagenes/dns-ttl.png)
+Tipo de registro: A, TTL: 134.
+Un TTL alto afecta al proceso de rollback ya que la dirección ip de la versión inestable permanecerá más tiempo en la cache del servidor, a pesar de que el cambio de ip ya se haya realizado, los usuarios seguirán siendo dirigidos a la dirección de la versión inestable ya que el resolver mantiene esa dirección durante el tiempo que señala el TTL. Un TTL bajo agiliza el proceso de rollback, pero a la vez aumenta el tráfico al servidor DNS.
+### TLS - seguridad en tránsito
+![tls-cert](imagenes/tls-cert.png)
+Si no se valida la cadena significa que no se pudo seguir la secuencia de validaciones hasta el CA root, una autoridad de certicación raiz confiable, el navegador notifica al usuario que el sitio no es confiable, existe el riesgo de ataque MITM(Man in the middle), que sucede cuando un tercero intercepta el tráfico. Además las alertas del navegador generan desconfianza en el usuario final, por lo tanto el uso de la aplicación se reduce.
+### Puertos - estado de runtime
+![puertos](imagenes/puertos.png)
+- puerto 53: puerto estandar en el que corre el servicio DNS.
+- puerto 443: puerto estandar para https, en este caso esta corriendo nginx.
+Podemos utilizar la enumeración de puertos para verificar que todos los servicios que estamos ofreciendo están corriendo en sus respectivos puertos, además de verificar que los puertos que vamos a usar antes del despliegue no estén ocupados.
+### 12-Factor - port binding, configuración, logs
+Para parametrizar el puerto sin incluirlo en el código, podemos usar variables de entorno, la variable de entorno contiene el número de puerto y en el código solo haríamos referencia al nombre de la variable.
+Los logs se ven a través del stdout/stderr al ejecutar la aplicación, no se deben almacenar en archivos locales, se capturan y se redirigen, ya que tenerlos en local es problemático, ocupan espacio, pueden perderse, dificulta la escalabilidad y el análisis.
+Un antipatrón sería los datos de configuración en el código, genera inconsistencias ya que tendríamos que crear distintos builds para cada entorno. Según 12-factor el compilado debería ser único y los datos de configuración se controlan en el entorno.
+### Checklist de diagnóstico (incidente simulado)
+- Contrato http: Revisar los logs en búsqueda de errores 4xx/5xx, revisar si los endpoints responden de forma correcta. Al conocer estos errores se puede rastrear el origen del problema.
+- Resolución DNS inconsistente: Se realiza la solicitud al Servidor DNS desde distintas redes en busca de inconsistencias.
+- Certificado TLS caducado o incorrecto: Revisar que el certificado no esté caducado, en caso de que haya expirado solo tendríamos que renovarlo.
+- Puerto mal configurado: Revisar que el servicio esté expuesto en el puerto correspondiente, en caso de que el puerto no esté ofreciendo el servicio debemos reiniciarlo.
+
+
 
