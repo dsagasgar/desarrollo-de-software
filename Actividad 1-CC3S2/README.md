@@ -92,6 +92,9 @@ Un antipatrón sería los datos de configuración en el código, genera inconsis
 - Resolución DNS inconsistente: Se realiza la solicitud al Servidor DNS desde distintas redes en busca de inconsistencias.
 - Certificado TLS caducado o incorrecto: Revisar que el certificado no esté caducado, en caso de que haya expirado solo tendríamos que renovarlo.
 - Puerto mal configurado: Revisar que el servicio esté expuesto en el puerto correspondiente, en caso de que el puerto no esté ofreciendo el servicio debemos reiniciarlo.
+## Desafíos de DevOps y mitigaciones
+![desafíos-devops](imagenes/desafios-devops.png)
+
 
 
 
