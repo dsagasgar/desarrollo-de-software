@@ -69,3 +69,11 @@ Aug 30 17:50:25 LAPTOP-V377DISR systemd[1]: Started nginx.service - A high perfo
 Aug 30 17:53:11 LAPTOP-V377DISR systemd[1]: Stopping nginx.service - A high performance web server and a reverse proxy server...
 Aug 30 17:53:11 LAPTOP-V377DISR systemd[1]: nginx.service: Deactivated successfully.
 ```
+## 4) 12-Factor App: port binding, configuración y logs
+### Port binding: muestra que la app escucha en el puerto indicado por PORT (evidencia ss).
+![puerto-8080](imagenes/revision_del_puerto.png)
+### Config por entorno: ejecuta dos veces con distintos MESSAGE/RELEASE y documenta el efecto en la respuesta JSON.
+![cambio-de-versiones-y-mensajes](imagenes/cambio_mensaje_versiones.png)
+### Logs a stdout: redirige a archivo mediante pipeline de shell y adjunta 5 líneas representativas. Explica por qué no se configura log file en la app.
+![logs-archivo](imagenes/logs_archivo.png)
+No se guardan los logs de manera local porque complican el análisis y monitoreo.
