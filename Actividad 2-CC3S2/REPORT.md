@@ -38,5 +38,34 @@ Al usar el comando dig no obtenemos respuesta, esto sucede porque la herramienta
 ![ttl-cache](imagenes/ttl-cache.png)
 Observamos que las respuestas no se repiten, el TTL es el tiempo que el servidor DNS guarda la asociación(dominio-ip) antes de volver a consultar al servidor autoritativo, los servicios grandes van rotando un conjunto de ips un TTL bajo aumenta la frecuencia de uso y puede provocar ips repetidas.
 ### ¿Qué diferencia hay entre /etc/hosts y una zona DNS autoritativa? ¿Por qué el hosts sirve para laboratorio?
-El /etc/hosts es un archivo local al cual podemos consultar antes que un servidor DNS, una zona DNS autoritativa sirve para resolver dominios en la red, es util para todos los hosts conectados a la red. El /etc/hosts nos sirve porque estamos corriendo el servicio de forma local.
-
+El /etc/hosts es un archivo local al cual podemos consultar antes que un servidor DNS, una zona DNS autoritativa sirve para resolver dominios en la red, es util para todos los hosts conectados a la red. El /etc/hosts nos sirve porque estamos corriendo el servicio de forma local. 
+## 3) TLS: seguridad en tránsito con Nginx como reverse proxy
+### Certificado laboratorio
+![certificado-laboratorio](imagenes/certificado_laboratorio.png)
+Generamos la llave y obtenemos el certificado con openssl, copiamos el certificado y la llave al directorio que usa nginx: /etc/ssl/miapp.
+### Configuración nginx
+Fragmento de miapp.conf:
+```
+location / {
+    proxy_pass http://127.0.0.1:8080;
+    proxy_set_header Host $host;
+    proxy_set_header X-Forwarded-For $remote_addr;
+    proxy_set_header X-Forwarded-Proto https;
+  }
+```
+![proxy-nginx](imagenes/proxy_nginx.png)
+### Valida el handshake
+![verificacion-certificado](imagenes/verificacion_certificado.png)
+El parametro `-k` de curl sirve para ignorar los errores en relación al certificado, en nuestro caso tenemos un certificado autofirmado.
+![curl-k](imagenes/curl-k.png)
+### Puertos y logs
+![puertos-8080-443](imagenes/puertos-8080-443.png)
+Al ejecutar el comando `journalctl -u nginx -n 50 --no-pager` podemos ver las ultimas lineas los logs del servicio de nginx.
+Algunas lineas:
+```
+Aug 27 17:52:13 LAPTOP-V377DISR systemd[1]: Reloaded nginx.service - A high performance web server and a reverse proxy server.
+Aug 30 17:50:25 LAPTOP-V377DISR systemd[1]: Starting nginx.service - A high performance web server and a reverse proxy server...
+Aug 30 17:50:25 LAPTOP-V377DISR systemd[1]: Started nginx.service - A high performance web server and a reverse proxy server.
+Aug 30 17:53:11 LAPTOP-V377DISR systemd[1]: Stopping nginx.service - A high performance web server and a reverse proxy server...
+Aug 30 17:53:11 LAPTOP-V377DISR systemd[1]: nginx.service: Deactivated successfully.
+```
