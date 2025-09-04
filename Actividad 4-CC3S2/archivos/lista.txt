@@ -1,0 +1,10 @@
+archivo1.txt
+archivo2.txt
+archivo3.doc
+lista.txt
+snap-private-tmp
+systemd-private-d4c5ef9bd83b403d9804953fed776411-systemd-logind.service-pQGr7P
+systemd-private-d4c5ef9bd83b403d9804953fed776411-systemd-resolved.service-V54IZH
+systemd-private-d4c5ef9bd83b403d9804953fed776411-systemd-timesyncd.service-FRZGEI
+systemd-private-d4c5ef9bd83b403d9804953fed776411-wsl-pro.service-FpqLqJ
+Hola

@@ -25,3 +25,20 @@ Ejercicios de reforzamiento
 Comprobación
 
 ![administracion-basica-comprobacion](imagenes/administracion_basica_comprobacion.png)
+## Utilidades de texto de Unix
+Ejercicios de reforzamiento
+1. Usa grep para buscar "root" en /etc/passwd: `grep root /etc/passwd`.
+2. Con sed, sustituye "dato1" por "secreto" en datos.txt: `sed 's/dato1/secreto/' datos.txt > nuevo.txt`.
+3. Con awk y cut, extrae usuarios de /etc/passwd: `awk -F: '{print $1}' /etc/passwd | sort | uniq`.
+![utilidades-de-texto-1-3](imagenes/utilidades_texto_1-3.png)
+4. Usa tr para convertir un texto a mayúsculas y tee para guardarlo: `printf "hola\n" | tr 'a-z' 'A-Z' | tee mayus.txt`.
+5. Encuentra archivos en /tmp modificados en los últimos 5 días: `find /tmp -mtime -5 -type f`.
+![utilidades-de-textp-4-5](imagenes/utilidades_texto_4-5.png)
+6. Pipeline completo: `ls /etc | grep conf | sort | tee lista_conf.txt | wc -l`.
+![utilidades-de-texto-6](imagenes/utilidades_texto_6.png)
+7. Usa tee para auditoría: `grep -Ei 'error|fail' evidencias/sesion.txt | tee evidencias/hallazgos.txt`.
+![utilidades-de-texto-7](imagenes/utilidades_texto_7.png)
+
+Comprobaciones
+
+![utilidades-de-texto-comprobacion](imagenes/utilidades_texto_comprobacion.png)
