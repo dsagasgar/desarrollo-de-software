@@ -1,0 +1,13 @@
+#git status
+On branch master
+
+No commits yet
+
+Changes to be committed:
+  (use "git rm --cached <file>..." to unstage)
+        new file:   README.md
+
+#git commit -m "Commit inicial con README.md"
+[master (root-commit) d560f68] Commit inicial con README.md
+ 1 file changed, 1 insertion(+)
+ create mode 100644 README.md

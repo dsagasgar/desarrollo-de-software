@@ -1,0 +1,3 @@
+#git config --list
+user.name=sergio
+user.email=sergio@example.com
