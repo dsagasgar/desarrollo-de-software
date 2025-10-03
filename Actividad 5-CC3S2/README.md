@@ -501,4 +501,3 @@ tar --sort=name --owner=0 --group=0 --numeric-owner --mtime='UTC 1970-01-01' -cz
 make[1]: Leaving directory '/home/ubuntu1/Desktop/desarrollo-de-software/Curso-CC3S2/labs/Laboratorio2'
 Tiempo: 0:00.15
 ```
-
