@@ -341,6 +341,65 @@ $ git log --graph --oneline --all
 * db7c23c Configura la documentación base del repositorio
 * d560f68 Commit inicial con README.md
 ```
+### Ejercicio 3(Creación y gestión de ramas desde commits específico)
+Objetivo: Practicar la creación de ramas desde commits específicos y comprender cómo Git maneja las referencias históricas.
+1. Crea una nueva rama desde un commit específico.
+```
+ubuntu1@LAPTOP-V377DISR:~/Desktop/desarrollo-de-software/actividad6$ git log --oneline
+789bb49 (HEAD -> master) Actualizar el mensaje main.py en la rama master
+c301444 Agrega main.py
+db7c23c Configura la documentación base del repositorio
+d560f68 Commit inicial con README.md
+ubuntu1@LAPTOP-V377DISR:~/Desktop/desarrollo-de-software/actividad6$ git branch bugfix/rollback-feature c301444
+ubuntu1@LAPTOP-V377DISR:~/Desktop/desarrollo-de-software/actividad6$ git checkout bugfix/rollback-feature
+Switched to branch 'bugfix/rollback-feature'
+ubuntu1@LAPTOP-V377DISR:~/Desktop/desarrollo-de-software/actividad6$ git branch
+* bugfix/rollback-feature
+  master
+```
+2. Modificar y confirmar cambios en la nueva rama.
+```
+ubuntu1@LAPTOP-V377DISR:~/Desktop/desarrollo-de-software/actividad6$ git add main.py
+ubuntu1@LAPTOP-V377DISR:~/Desktop/desarrollo-de-software/actividad6$ git commit -m "Corregir error en la funcionalidad de rollback"
+[bugfix/rollback-feature abc079f] Corregir error en la funcionalidad de rollback
+ 1 file changed, 3 insertions(+)
+```
+3. Fusionar los cambios en la rama principal.
+```
+ubuntu1@LAPTOP-V377DISR:~/Desktop/desarrollo-de-software/actividad6$ git checkout master
+Switched to branch 'master'
+ubuntu1@LAPTOP-V377DISR:~/Desktop/desarrollo-de-software/actividad6$ git merge bugfix/rollback-feature
+Auto-merging main.py
+CONFLICT (content): Merge conflict in main.py
+Automatic merge failed; fix conflicts and then commit the result.
+## Corregir conflictos manualmente
+ubuntu1@LAPTOP-V377DISR:~/Desktop/desarrollo-de-software/actividad6$ git add main.py
+ubuntu1@LAPTOP-V377DISR:~/Desktop/desarrollo-de-software/actividad6$ git status
+On branch master
+All conflicts fixed but you are still merging.
+  (use "git commit" to conclude merge)
+
+Changes to be committed:
+        modified:   main.py
+
+ubuntu1@LAPTOP-V377DISR:~/Desktop/desarrollo-de-software/actividad6$ git commit -m "Conflictos corregidos en main.py"
+[master dfaf92a] Conflictos corregidos en main.py
+```
+4. Explorar el historial después de la fusión.
+```bash
+ubuntu1@LAPTOP-V377DISR:~/Desktop/desarrollo-de-software/actividad6$ git log --graph --oneline
+*   dfaf92a (HEAD -> master) Conflictos corregidos en main.py
+|\
+| * abc079f (bugfix/rollback-feature) Corregir error en la funcionalidad de rollback
+* | 789bb49 Actualizar el mensaje main.py en la rama master
+|/
+* c301444 Agrega main.py
+* db7c23c Configura la documentación base del repositorio
+* d560f68 Commit inicial con README.md
+```
+
+
+
 
 
 
