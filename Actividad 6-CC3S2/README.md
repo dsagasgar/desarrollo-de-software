@@ -386,7 +386,7 @@ ubuntu1@LAPTOP-V377DISR:~/Desktop/desarrollo-de-software/actividad6$ git commit 
 [master dfaf92a] Conflictos corregidos en main.py
 ```
 4. Explorar el historial después de la fusión.
-```bash
+```
 ubuntu1@LAPTOP-V377DISR:~/Desktop/desarrollo-de-software/actividad6$ git log --graph --oneline
 *   dfaf92a (HEAD -> master) Conflictos corregidos en main.py
 |\
@@ -397,6 +397,212 @@ ubuntu1@LAPTOP-V377DISR:~/Desktop/desarrollo-de-software/actividad6$ git log --g
 * db7c23c Configura la documentación base del repositorio
 * d560f68 Commit inicial con README.md
 ```
+5. Eliminar la rama bugfix/rollback-feature.
+```
+ubuntu1@LAPTOP-V377DISR:~/Desktop/desarrollo-de-software/actividad6$ git branch
+  bugfix/rollback-feature
+* master
+ubuntu1@LAPTOP-V377DISR:~/Desktop/desarrollo-de-software/actividad6$ git branch -d bugfix/rollback-feature
+Deleted branch bugfix/rollback-feature (was abc079f).
+ubuntu1@LAPTOP-V377DISR:~/Desktop/desarrollo-de-software/actividad6$ git branch
+* master
+```
+### Ejercicio 4(Manipulación y restauración de commits con git reset y git restore)
+Objetivo: Comprender cómo usar git reset y git restore para deshacer cambios en el historial y en el área de trabajo.
+1. Hacer cambios en el main.py.
+```
+ubuntu1@LAPTOP-V377DISR:~/Desktop/desarrollo-de-software/actividad6$ git add main.py
+ubuntu1@LAPTOP-V377DISR:~/Desktop/desarrollo-de-software/actividad6$ git commit -m "Introduce un cambio para restablecer"
+[master 2fc2a79] Introduce un cambio para restablecer
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+```
+2. Usar git reset para deshacer el commit.
+```
+ubuntu1@LAPTOP-V377DISR:~/Desktop/desarrollo-de-software/actividad6$ git reset --hard HEAD~1
+HEAD is now at dfaf92a Conflictos corregidos en main.py
+ubuntu1@LAPTOP-V377DISR:~/Desktop/desarrollo-de-software/actividad6$ git log --oneline
+dfaf92a (HEAD -> master) Conflictos corregidos en main.py
+abc079f Corregir error en la funcionalidad de rollback
+789bb49 Actualizar el mensaje main.py en la rama master
+c301444 Agrega main.py
+db7c23c Configura la documentación base del repositorio
+d560f68 Commit inicial con README.md
+```
+3. Usar git restore para deshacer cambios no confirmados.
+```
+ubuntu1@LAPTOP-V377DISR:~/Desktop/desarrollo-de-software/actividad6$ echo "Agrega linea en README" >> README.md
+ubuntu1@LAPTOP-V377DISR:~/Desktop/desarrollo-de-software/actividad6$ git status
+On branch master
+Changes not staged for commit:
+  (use "git add <file>..." to update what will be committed)
+  (use "git restore <file>..." to discard changes in working directory)
+        modified:   README.md
+
+no changes added to commit (use "git add" and/or "git commit -a")
+ubuntu1@LAPTOP-V377DISR:~/Desktop/desarrollo-de-software/actividad6$ git restore README.md
+ubuntu1@LAPTOP-V377DISR:~/Desktop/desarrollo-de-software/actividad6$ git status
+On branch master
+nothing to commit, working tree clean
+```
+### Ejercicio 5(Trabajo colaborativo y manejo de Pull Requests)
+Objetivo: Simular un flujo de trabajo colaborativo utilizando ramas y pull requests.
+1. Crear un nuevo repositorio remoto.
+```
+ubuntu1@LAPTOP-V377DISR:~/Desktop/desarrollo-de-software$ git clone https://github.com/dsagasgar/repositorio-remoto
+Cloning into 'repositorio-remoto'...
+warning: You appear to have cloned an empty repository.
+```
+2. Crea una rama para desarrollo de una característica.
+```
+ubuntu1@LAPTOP-V377DISR:~/Desktop/desarrollo-de-software/repositorio-remoto$ git branch feature/team-feature
+ubuntu1@LAPTOP-V377DISR:~/Desktop/desarrollo-de-software/repositorio-remoto$ git checkout feature/team-feature
+Switched to branch 'feature/team-feature'
+```
+3. Realizar cambios y enviar la rama al repositorio remoto.
+```
+ubuntu1@LAPTOP-V377DISR:~/Desktop/desarrollo-de-software/repositorio-remoto$ git add .
+ubuntu1@LAPTOP-V377DISR:~/Desktop/desarrollo-de-software/repositorio-remoto$ git commit -m "Agrega script de colaboración"
+[feature/team-feature dbb5ac0] Agrega script de colaboración
+ 1 file changed, 1 insertion(+)
+ create mode 100644 colaboracion.py
+ubuntu1@LAPTOP-V377DISR:~/Desktop/desarrollo-de-software/repositorio-remoto$ git push origin feature/team-feature
+Enumerating objects: 6, done.
+Counting objects: 100% (6/6), done.
+Delta compression using up to 12 threads
+Compressing objects: 100% (3/3), done.
+Writing objects: 100% (6/6), 510 bytes | 510.00 KiB/s, done.
+Total 6 (delta 0), reused 0 (delta 0), pack-reused 0
+To https://github.com/dsagasgar/repositorio-remoto
+ * [new branch]      feature/team-feature -> feature/team-feature
+```
+4. Abrir un pull request.
+![alt text](image.png)
+5. Revisar y fusionar pull request.
+![alt text](image-1.png)
+6. Eliminar la rama remota y local.
+```
+ubuntu1@LAPTOP-V377DISR:~/Desktop/desarrollo-de-software/repositorio-remoto$ git branch -D feature/te
+am-feature
+Deleted branch feature/team-feature (was dbb5ac0).
+```
+### Ejercicio 6(Cherry-Picking y Git Stash)
+Objetivo: Aprender a aplicar commits específicos a otra rama utilizando git cherry-pick y a guardar temporalmente cambios no confirmados utilizando git stash.
+1. Hacer cambios en main.py y confirmarlos.
+```
+ubuntu1@LAPTOP-V377DISR:~/Desktop/desarrollo-de-software/actividad6$ git add main.py
+ubuntu1@LAPTOP-V377DISR:~/Desktop/desarrollo-de-software/actividad6$ git commit -m "Agrega ejemplo de cherry-pick"
+[master b8439c9] Agrega ejemplo de cherry-pick
+ 1 file changed, 1 insertion(+)
+```
+2. Crear una nueva rama y aplicar el commit específico.
+```
+ubuntu1@LAPTOP-V377DISR:~/Desktop/desarrollo-de-software/actividad6$ git branch feature/cherry-pick
+ubuntu1@LAPTOP-V377DISR:~/Desktop/desarrollo-de-software/actividad6$ git checkout feature/cherry-pick
+Switched to branch 'feature/cherry-pick'
+ubuntu1@LAPTOP-V377DISR:~/Desktop/desarrollo-de-software/actividad6$ git cherry-pick b8439c9
+On branch feature/cherry-pick
+You are currently cherry-picking commit b8439c9.
+  (all conflicts fixed: run "git cherry-pick --continue")
+  (use "git cherry-pick --skip" to skip this patch)
+  (use "git cherry-pick --abort" to cancel the cherry-pick operation)
+
+nothing to commit, working tree clean
+The previous cherry-pick is now empty, possibly due to conflict resolution.
+If you wish to commit it anyway, use:
+
+    git commit --allow-empty
+
+Otherwise, please use 'git cherry-pick --skip'
+```
+3. Guardar temporalmente cambios no confirmados.
+```
+ubuntu1@LAPTOP-V377DISR:~/Desktop/desarrollo-de-software/actividad6$ echo "Este cambio está en el stash" >> main.py
+ubuntu1@LAPTOP-V377DISR:~/Desktop/desarrollo-de-software/actividad6$ git status
+On branch master
+Changes not staged for commit:
+  (use "git add <file>..." to update what will be committed)
+  (use "git restore <file>..." to discard changes in working directory)
+        modified:   main.py
+
+no changes added to commit (use "git add" and/or "git commit -a")
+ubuntu1@LAPTOP-V377DISR:~/Desktop/desarrollo-de-software/actividad6$ git stash
+Saved working directory and index state WIP on master: b8439c9 Agrega ejemplo de cherry-pick
+ubuntu1@LAPTOP-V377DISR:~/Desktop/desarrollo-de-software/actividad6$ git status
+On branch master
+nothing to commit, working tree clean
+```
+4. Aplicar los cambios guardados.
+```
+ubuntu1@LAPTOP-V377DISR:~/Desktop/desarrollo-de-software/actividad6$ git status
+On branch master
+nothing to commit, working tree clean
+ubuntu1@LAPTOP-V377DISR:~/Desktop/desarrollo-de-software/actividad6$ echo 'mas cambios' >> README.md
+ubuntu1@LAPTOP-V377DISR:~/Desktop/desarrollo-de-software/actividad6$ git status
+On branch master
+Changes not staged for commit:
+  (use "git add <file>..." to update what will be committed)
+  (use "git restore <file>..." to discard changes in working directory)
+        modified:   README.md
+
+no changes added to commit (use "git add" and/or "git commit -a")
+ubuntu1@LAPTOP-V377DISR:~/Desktop/desarrollo-de-software/actividad6$ git add README.md
+ubuntu1@LAPTOP-V377DISR:~/Desktop/desarrollo-de-software/actividad6$ git status
+On branch master
+Changes to be committed:
+  (use "git restore --staged <file>..." to unstage)
+        modified:   README.md
+
+ubuntu1@LAPTOP-V377DISR:~/Desktop/desarrollo-de-software/actividad6$ git stash pop
+On branch master
+Changes to be committed:
+  (use "git restore --staged <file>..." to unstage)
+        modified:   README.md
+
+Changes not staged for commit:
+  (use "git add <file>..." to update what will be committed)
+  (use "git restore <file>..." to discard changes in working directory)
+        modified:   main.py
+
+Dropped refs/stash@{0} (33a66774dbc45d452556afe231140395c7437b13)
+```
+5. Revisar el historial y confirmar la correcta aplicación de los cambios.
+```
+ubuntu1@LAPTOP-V377DISR:~/Desktop/desarrollo-de-software/actividad6$ git add .
+ubuntu1@LAPTOP-V377DISR:~/Desktop/desarrollo-de-software/actividad6$ git commit -m "cambios en main.py y readme"
+[master 5027549] cambios en main.py y readme
+ 2 files changed, 2 insertions(+)
+ubuntu1@LAPTOP-V377DISR:~/Desktop/desarrollo-de-software/actividad6$ git log
+commit 5027549fe4ecb6ee053830bb8dd8d6b0ceb05e88 (HEAD -> master)
+Author: sergio <sergio@example.com>
+Date:   Sun Oct 5 09:40:11 2025 -0500
+
+    cambios en main.py y readme
+
+commit b8439c9c36fd2a6f021202f0e2ec17bfda534f2f (feature/cherry-pick)
+Author: sergio <sergio@example.com>
+Date:   Sun Oct 5 09:20:59 2025 -0500
+
+    Agrega ejemplo de cherry-pick
+
+commit dfaf92a7b698eefc65acdb1cf1438ae4ba8a0957
+Merge: 789bb49 abc079f
+Author: sergio <sergio@example.com>
+Date:   Sun Oct 5 07:48:59 2025 -0500
+
+    Conflictos corregidos en main.py
+
+commit abc079f6f900d1244b57a3d92c2bab4c93de253b
+Author: sergio <sergio@example.com>
+Date:   Sun Oct 5 07:43:26 2025 -0500
+
+    Corregir error en la funcionalidad de rollback
+
+commit 789bb4959ab7e6a4f350dfd6c6e39d3a0c0998aa
+:
+```
+
+
+
 
 
 
