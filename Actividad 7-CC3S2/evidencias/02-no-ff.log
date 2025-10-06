@@ -1,0 +1,6 @@
+*   042abcb (HEAD -> main) Este es un commit de fusion, no solo se mueve el puntero de la rama main
+|\
+| * 40d8552 (add-feature) Segundo commit desde add-feature
+| * 65ef89c Commit desde add-feature
+|/
+* 4c2f41e Commit inicial en main
